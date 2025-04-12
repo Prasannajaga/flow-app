@@ -1,42 +1,49 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+input{
+  color: black
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+input{
+  @apply shadow-md;
+}
+
+
+.primary-btn{ 
+  @apply  p-3 text-white rounded-lg transition-all duration-300 bg-dark/80 shadow-lg;
+}
+
+.item{
+  @apply p-2 py-1 text-sm border rounded-md cursor-pointer border-gray-300 hover:text-white hover:bg-dark/80 transition-all duration-100 shadow-xl
+}
+
+.primary-layout {
+  @apply bg-gradient-to-b from-gray-100 to-gray-100  dark:from-[#492559] dark:to-[#000000] dark:text-white;
+}
+
+
+#titlebar {
+    -webkit-app-region: drag; /* Enable window dragging */
+    height: 30px;
+    background: #18181b;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .controls button {
+    -webkit-app-region: no-drag;
+    background: none; 
+    border: none;
+    margin-left: 5px;
+    cursor: pointer;
   }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
