@@ -1,0 +1,1 @@
+[{"title":"Cmd","cmd_args":[{"id":"shell","path":"D:\\DEVELOPMENT\\my-movie-app","cmd":"npm run dev"}],"expand":false},{"title":"Browsers","cmd_args":[{"id":"web","path":"","cmd":"npm run dev"}],"expand":false}]
