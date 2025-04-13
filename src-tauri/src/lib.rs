@@ -4,8 +4,7 @@ use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager};
 use std::fs::{self, create_dir_all};
 use std::io::Write;
-use std::path::{Path, PathBuf}; 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
+use std::path::{Path, PathBuf};  
 use std::process::Command; 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -23,20 +22,38 @@ struct InputData {
     cmd_args: Vec<CmdArg>,
     expand : Option<bool>,
 }
+#[derive(Debug, Serialize, Deserialize)]
+struct PathData {
+    id : String, 
+    path: String
+}
   
 const CONFIG_FILE_NAME: &str = "config.flow"; 
+const PATH_FILE_NAME: &str = "path.flow"; 
 
 #[tauri::command]
 async fn config_options(app: AppHandle ,options: Vec<InputData>) -> Result<String, String> {  
      
-    let json_data = serde_json::to_string(&options).map_err(|e| e.to_string())?; 
-    println!("saved data {}" , json_data.as_str());  
+    let json_data = serde_json::to_string(&options).map_err(|e| e.to_string())?;  
 
     let base_path: PathBuf = app.path()
     .app_local_data_dir()
     .expect("Failed to open").join("flow-app"); 
 
     let _result = create_file_and_write_text( &base_path, CONFIG_FILE_NAME , json_data.as_str()); 
+    Ok("Sucess".to_owned())
+} 
+
+#[tauri::command]
+async fn config_path_options(app: AppHandle , options: Vec<PathData>) -> Result<String, String> {  
+     
+    let json_data = serde_json::to_string(&options).map_err(|e| e.to_string())?;  
+
+    let base_path: PathBuf = app.path()
+    .app_local_data_dir()
+    .expect("Failed to open").join("flow-app"); 
+
+    let _result = create_file_and_write_text( &base_path, PATH_FILE_NAME , json_data.as_str()); 
     Ok("Sucess".to_owned())
 } 
 
@@ -65,12 +82,30 @@ async fn get_config(app : AppHandle) -> Result<Vec<InputData>, String> {
     .app_local_data_dir()
     .expect("failed to load applocalData") 
     .join("flow-app")
-    .join("config.flow");
+    .join(CONFIG_FILE_NAME);
 
     let content = fs::read_to_string(path).map_err(|e| e.to_string())?;
 
     // Convert JSON back to Vec<InputData>
     let data: Vec<InputData> =
+        serde_json::from_str(&content).map_err(|e: serde_json::Error| e.to_string())?;
+
+    Ok(data)
+}
+
+#[tauri::command]
+async fn get_path_config(app : AppHandle) -> Result<Vec<PathData>, String> {
+    let path: PathBuf = app
+    .path()
+    .app_local_data_dir()
+    .expect("failed to load applocalData") 
+    .join("flow-app")
+    .join(PATH_FILE_NAME);
+
+    let content = fs::read_to_string(path).map_err(|e| e.to_string())?;
+
+    // Convert JSON back to Vec<InputData>
+    let data: Vec<PathData> =
         serde_json::from_str(&content).map_err(|e: serde_json::Error| e.to_string())?;
 
     Ok(data)
@@ -126,7 +161,9 @@ pub fn run() {
             open_multiple_cmds,
             config_options,
             get_config,
-            get_bookmarks
+            get_bookmarks,
+            config_path_options,
+            get_path_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

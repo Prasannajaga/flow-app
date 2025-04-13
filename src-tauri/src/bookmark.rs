@@ -49,10 +49,13 @@ fn parse_bookmarks(path: &Path) -> Option<Value> {
         Err(_) => None,
     }
 }
+ 
 
 pub fn get_browsers_bookmarks() ->  Result<String, String>  {
     let bookmarks = find_browser_profiles();
     let mut results: Vec<HashMap<String, Value>> = Vec::new();
+
+
 
     for (title, path , logo_path) in bookmarks {
         if path.extension().map_or(false, |e| e == "sqlite") {
@@ -63,13 +66,11 @@ pub fn get_browsers_bookmarks() ->  Result<String, String>  {
         if let Some(json) = parse_bookmarks(&path) {
             let mut entry = HashMap::new();
             entry.insert("title".to_string(), Value::String(title));
-            entry.insert("bookmarks".to_string(), json);
-
-            println!("logo {}" , logo_path);
+            entry.insert("bookmarks".to_string(), json); 
 
             let logo_base64 = fs::read(&logo_path)
-                .map(|bytes| format!("data:image/x-icon;base64,{}", encode(bytes)))
-                .unwrap_or_default();
+            .map(|bytes| format!("data:image/x-icon;base64,{}", encode(bytes)))
+            .unwrap_or_default();
 
             entry.insert("logo".to_string(), Value::String(logo_base64));
 
