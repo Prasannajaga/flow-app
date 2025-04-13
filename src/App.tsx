@@ -3,7 +3,7 @@ import "./App.css"
 import { invoke } from "@tauri-apps/api/core";
 import json from "./constants/default.json";
 import ExpansionPanel from "./components/autoComplete";  
-import BookMarks, { bookMarks } from "./components/bookmarks";
+import BookMarks from "./components/bookmarks";
 
 
 export type flowType = { 
@@ -26,8 +26,7 @@ function App() {
  
   const [configData , setConfigData ] = useState<flowType[]>(json.data); 
   const [isOpen , setIsOpen] = useState<boolean>(false);
-  const [currentTab , setTab] = useState<string>("All");
-  const [bookmarksArr , setBookMarks] = useState<bookMarks[]>([])
+  const [currentTab , setTab] = useState<string>("All"); 
   const [formData, setFormData] = useState({
     title: '',
     path: '', 
@@ -40,21 +39,10 @@ function App() {
     } 
     read();  
   } , []); 
-
-  // for updating bookmarks 
-  useEffect(()=>{  
-    const read = async () =>{ 
-      const book = await invoke("get_bookmarks");  
-      let data = JSON.parse(book as string);
-      setBookMarks(data);  
-    }  
-    read();  
-  } , [currentTab]); 
+ 
   
  
-  function execute(data : flowType[]){ 
-    console.log(data);
-    
+  function execute(data : flowType[]){  
     invoke("open_multiple_cmds" , { input : data});
   }
 
@@ -111,7 +99,7 @@ function App() {
           {
             currentTab === "All" ? 
             <ExpansionPanel config_data={configData}  updateCallbckFn={updateConfig} ></ExpansionPanel>  :
-            <BookMarks bookmarks={bookmarksArr}></BookMarks> 
+            <BookMarks ></BookMarks> 
           } 
         </section>
  
