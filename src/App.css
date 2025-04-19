@@ -25,7 +25,7 @@ input{
 }
 
 .primary-layout {
-  @apply bg-gradient-to-b from-gray-100 to-gray-100  dark:from-[#492559] dark:to-[#000000] dark:text-white;
+  @apply bg-gradient-to-b from-gray-100 to-gray-100  dark:from-[#1a202c] dark:to-[#000000] dark:text-white;
 }
 
 
